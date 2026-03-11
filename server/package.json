@@ -12,12 +12,24 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+<<<<<<< HEAD
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "inngest": "^3.52.3",
     "mongoose": "^9.2.1",
     "multer": "^2.0.2"
+=======
+    "@clerk/express": "^1.7.76",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "imagekit": "^6.0.0",
+    "inngest": "^3.52.3",
+    "mongoose": "^9.2.1",
+    "multer": "^2.0.2",
+    "nodemailer": "^8.0.2"
+>>>>>>> 4c483ab (Initial commit)
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
