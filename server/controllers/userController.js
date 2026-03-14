@@ -2,6 +2,38 @@ import imagekit from '../configs/imagekit.js';
 import Connection from '../models/Connection.js';
 import User from '../models/User.js';
 import fs from 'fs';
+import Post from '../models/Post.js';
+import { inngest } from '../inngest/index.js';
+
+export const getUserProfile = async (req, res) => {
+  try {
+    const { profileId } = req.body;
+
+    const profile = await User.findById(profileId);
+
+    if (!profile) {
+      return res.json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    const posts = await Post.find({ user: profileId }).sort({
+      createdAt: -1,
+    });
+
+    res.json({
+      success: true,
+      profile,
+      posts,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 // Get User Data using userId
 export const getUserData = async (req, res) => {
@@ -62,14 +94,14 @@ export const updateUserData = async (req, res) => {
           { width: '512' },
         ],
       });
-      updatedData.profile_picture = url;
+      updateData.profile_picture = url;
     }
 
     if (cover) {
       const buffer = fs.readFileSync(cover.path);
       const response = await imagekit.upload({
         file: buffer,
-        fileName: profile.originalname,
+        fileName: cover.originalname,
       });
 
       const url = imagekit.url({
@@ -80,7 +112,7 @@ export const updateUserData = async (req, res) => {
           { width: '1280' },
         ],
       });
-      updatedData.cover_photo = url;
+      updateData.cover_photo = url;
     }
 
     const user = await User.findByIdAndUpdate(userId, updatedData, {
@@ -159,7 +191,7 @@ export const unfollowUser = async (req, res) => {
     user.following = user.following.filter((user) => user !== id);
     await user.save();
 
-    const touser = await User.findById(id);
+    const toUser = await User.findById(id);
     toUser.followers = toUser.followers.filter((user) => user !== userId);
     await toUser.save();
 
@@ -181,7 +213,8 @@ export const sendConnectionRequest = async (req, res) => {
 
     // Check if user has sent more than 20 connection requests in the last 24 hours
     const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const sendConnectionRequest = await Connection.find({
+
+    const ConnectionRequest = await Connection.find({
       from_user_id: userId,
       created_at: { $gt: last24Hours },
     });
@@ -202,10 +235,16 @@ export const sendConnectionRequest = async (req, res) => {
     });
 
     if (!connection) {
-      await Connection.create({
+      const newConnection = await Connection.create({
         from_user_id: userId,
         to_user_id: id,
       });
+
+      await inngest.send({
+        name: 'app/connection-request',
+        data: { connectionId: newConnection._id },
+      });
+
       return res.json({
         success: true,
         message: 'Connection request sent successfully',
@@ -283,6 +322,22 @@ export const acceptConnectionRequest = async (req, res) => {
     await connection.save();
 
     res.json({ success: true, message: 'Connection accepted successfully' });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// Get User Profiles
+export const getUserProfiles = async (req, res) => {
+  try {
+    const { profileId } = req.body;
+    const profile = await User.findById(profileId);
+    if (!profile) {
+      return res.json({ success: false, message: 'Profile not found' });
+    }
+    const posts = await Post.find({ user: profileId }).populate('user');
+    res.json({ success: true, profile, posts });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });

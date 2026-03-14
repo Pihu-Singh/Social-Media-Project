@@ -15,10 +15,9 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit }) => {
                 rounded-full"
         >
           <img
-            src={user.profile_picture}
-            alt=""
-            className="absolute rounded-full
-                    z-2"
+            src={user?.profile_picture || 'https://via.placeholder.com/150'}
+            alt="profile"
+            className="w-full h-full object-cover rounded-full"
           />
         </div>
 
