@@ -4,11 +4,12 @@ import cors from 'cors';
 import connectDB from './configs/db.js';
 import { inngest, functions } from './inngest/index.js';
 import { serve } from 'inngest/express';
-<<<<<<< HEAD
-=======
+
 import { clerkMiddleware } from '@clerk/express';
 import userRouter from './routes/userRoutes.js';
->>>>>>> 4c483ab (Initial commit)
+import postRouter from './routes/postRoutes.js';
+import storyRouter from './routes/storyRoutes.js';
+import messageRouter from './routes/messageRoutes.js';
 
 const app = express();
 
@@ -16,20 +17,20 @@ await connectDB();
 
 app.use(express.json());
 app.use(cors());
-<<<<<<< HEAD
-=======
+
 app.use(clerkMiddleware());
->>>>>>> 4c483ab (Initial commit)
 
 app.get('/', (req, res) => {
   res.send('Server is running');
 });
 
 app.use('/api/inngest', serve({ client: inngest, functions }));
-<<<<<<< HEAD
-=======
+
 app.use('/api/user', userRouter);
->>>>>>> 4c483ab (Initial commit)
+
+app.use('/api/post', postRouter);
+app.use('/api/story', storyRouter);
+app.use('/api/message', messageRouter);
 
 const PORT = process.env.PORT || 4000;
 

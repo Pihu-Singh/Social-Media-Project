@@ -1,17 +1,40 @@
 import React, { useState } from 'react';
 import Loading from '../components/Loading';
-import { dummyUserData } from '../assets/assets';
 import { X, Image } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 
 const CreatePost = () => {
   const [content, setContent] = useState('');
   const [Images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const user = dummyUserData;
+  const user = useSelector((state) => state.user.value);
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+
+      if (!content && Images.length === 0) {
+        toast.error("Post can't be empty");
+        return;
+      }
+
+      // Yaha normally API call hoti hai
+      console.log('Content:', content);
+      console.log('Images:', Images);
+
+      // reset form
+      setContent('');
+      setImages([]);
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return <Loading />;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
@@ -24,51 +47,47 @@ const CreatePost = () => {
           <p className="text-slate-600">Share your thoughts with the world</p>
         </div>
 
-        {/* Form*/}
-        <div
-          className="max-w-xl bg-white p-4 sm:p-8 sm:pb-3 rounded-xl shadow-md
-      space-y-4"
-        >
+        {/* Form */}
+        <div className="max-w-xl bg-white p-4 sm:p-8 sm:pb-3 rounded-xl shadow-md space-y-4">
           {/* Header */}
           <div className="flex items-center gap-3">
             <img
-              src={user.profile_picture}
+              src={user?.profile_picture}
               alt=""
               className="w-12 h-12 rounded-full shadow"
             />
             <div>
-              <h2 className="font-semibold">{user.full_name}</h2>
-              <p className="text-sm text-gray-500">@{user.username}</p>
+              <h2 className="font-semibold">{user?.full_name}</h2>
+              <p className="text-sm text-gray-500">@{user?.username}</p>
             </div>
           </div>
 
           {/* Text Area */}
           <textarea
-            className="w-full resize-none max-h-20 mt-4 text-sm
-          outline-none placeholder-gray-400"
-            placeholder="whats Happening?"
+            className="w-full resize-none max-h-20 mt-4 text-sm outline-none placeholder-gray-400"
+            placeholder="Whats happening?"
             onChange={(e) => setContent(e.target.value)}
             value={content}
           />
 
-          {/* Images*/}
+          {/* Images Preview */}
           {Images.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-4">
               {Images.map((image, i) => (
                 <div key={i} className="relative group">
                   <img
                     src={URL.createObjectURL(image)}
-                    className="h-20
-                  rounded-md"
+                    className="h-20 rounded-md"
                     alt=""
                   />
+
+                  {/* Delete Image */}
                   <div
                     onClick={() =>
-                      setImages(image.filter((_, index) => index !== i))
+                      setImages(Images.filter((_, index) => index !== i))
                     }
-                    className="absolute hidden group-hover:flex justify-center
-                  items-center top-0 right-0 bottom-0 left-0 bg-black/40
-                  rounded-md cursor-pointer"
+                    className="absolute hidden group-hover:flex justify-center items-center
+                    top-0 right-0 bottom-0 left-0 bg-black/40 rounded-md cursor-pointer"
                   >
                     <X className="w-6 h-6 text-white" />
                   </div>
@@ -76,15 +95,12 @@ const CreatePost = () => {
               ))}
             </div>
           )}
+
           {/* Bottom Bar */}
-          <div
-            className="flex items-center justify-between pt-3 border-t
-          border-gray-300"
-          >
+          <div className="flex items-center justify-between pt-3 border-t border-gray-300">
             <label
               htmlFor="images"
-              className="flex items-center gap-2 text-sm 
-            text-gray-500 hover:text-gray-700 transition cursor-pointer"
+              className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition cursor-pointer"
             >
               <Image className="size-6" />
             </label>
@@ -104,15 +120,14 @@ const CreatePost = () => {
               disabled={loading}
               onClick={() =>
                 toast.promise(handleSubmit(), {
-                  loading: 'uploading...',
+                  loading: 'Uploading...',
                   success: <p>Post Added</p>,
                   error: <p>Post Not Added</p>,
                 })
               }
-              className="text-sm bg-gradient-to-r from-indigo-500
-            to-purple-600 hover:from-indigo-600 hover:to-purple-700
-            active:scale-95 transition text-white font-medium px-8 py-2
-            rounded-md cursor-pointer"
+              className="text-sm bg-gradient-to-r from-indigo-500 to-purple-600
+              hover:from-indigo-600 hover:to-purple-700 active:scale-95 transition
+              text-white font-medium px-8 py-2 rounded-md cursor-pointer"
             >
               Publish Post
             </button>

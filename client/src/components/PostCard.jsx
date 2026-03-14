@@ -1,23 +1,27 @@
 import { BadgeCheck, Heart, MessageCircle, Share2 } from 'lucide-react';
 import React, { useState } from 'react';
 import moment from 'moment';
-import { dummyUserData } from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const PostCard = ({ post }) => {
-  const postWithHashtags = post.content.replace(
+  const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.user.value);
+
+  if (!post) return null;
+
+  const postWithHashtags = post.content?.replace(
     /(#\w+)/g,
     '<span class="text-indigo-600">$1</span>',
   );
 
-  const [likes, setLikes] = useState(post.likes_count);
-  const currentUser = dummyUserData;
+  const [likes, setLikes] = useState(post?.likes || []);
 
-  const handleLike = async () => {};
-
-  if (!post) return null;
-
-  const navigate = useNavigate();
+  const handleLike = () => {
+    if (!likes.includes(currentUser?._id)) {
+      setLikes([...likes, currentUser._id]);
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow p-4 space-y-4 w-full max-w-2xl">
@@ -27,8 +31,8 @@ const PostCard = ({ post }) => {
         className="inline-flex items-center gap-3 cursor-pointer"
       >
         <img
-          src={post.user?.profile_picture}
-          alt=""
+          src={post.user?.profile_picture || 'https://via.placeholder.com/50'}
+          alt="profile"
           className="w-10 h-10
             rounded-full shadow"
         />
