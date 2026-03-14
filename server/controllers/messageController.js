@@ -1,11 +1,7 @@
 import fs from 'fs';
-import imagekit from '../configs/imagekit';
-import Message from '../models/Message';
-import { connection } from 'mongoose';
-
-// Create an empty object to store SS Event connections
-const connections = {};
-
+import imagekit from '../configs/imagekit.js';
+import Message from '../models/Message.js';
+import { connections } from 'mongoose';
 // Controller function for the SSE endpoint
 export const sseController = (req, res) => {
   const { userId } = req.params;

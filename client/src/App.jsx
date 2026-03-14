@@ -8,17 +8,10 @@ import Connection from './pages/Connection';
 import Discover from './pages/Discover';
 import Profile from './pages/Profile';
 import CreatePost from './pages/CreatePost';
-<<<<<<< HEAD
 import { useUser } from '@clerk/clerk-react';
 import Layout from './pages/Layout';
 import { Toaster } from 'react-hot-toast';
-
-const App = () => {
-  const { user } = useUser();
-=======
-import { useUser, useAuth } from '@clerk/clerk-react';
-import Layout from './pages/Layout';
-import { Toaster } from 'react-hot-toast';
+import { useAuth } from '@clerk/clerk-react';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchUser } from './features/user/userSlice';
@@ -39,7 +32,6 @@ const App = () => {
     fetchData();
   }, [user, getToken, dispatch]);
 
->>>>>>> 4c483ab (Initial commit)
   return (
     <>
       <Toaster />

@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import Post from './Post';
 
 const StorySchema = new mongoose.Schema(
   {

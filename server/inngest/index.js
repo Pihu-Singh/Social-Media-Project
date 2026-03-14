@@ -1,7 +1,5 @@
 import { Inngest } from 'inngest';
 import User from '../models/User.js';
-import { Inngest, step } from 'inngest';
-import User from '../models/User.js';
 import Connection from '../models/Connection.js';
 import sendEmail from '../configs/nodeMailer.js';
 import Story from '../models/story.js';
@@ -63,9 +61,6 @@ const syncUserDeletion = inngest.createFunction(
     await User.findByIdAndDelete(id);
   },
 );
-
-// Create an empty array where we'll export future Inngest functions
-export const functions = [syncUserCreation, syncUserUpdation, syncUserDeletion];
 
 // Inngest Function to send Reminder when a new connection request is added
 const sendNewConnectionRequestReminder = inngest.createFunction(
