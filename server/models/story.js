@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
-const StorySchema = new mongoose.Schema(
+const storySchema = new mongoose.Schema(
   {
-    user: { type: String, ref: 'User', requried: true },
+    user: { type: String, ref: 'User', required: true },
     content: { type: String },
     media_url: { type: String },
     media_type: { type: String, enum: ['text', 'image', 'video'] },
@@ -12,6 +12,6 @@ const StorySchema = new mongoose.Schema(
   { timestamps: true, minimize: false },
 );
 
-const Story = mongoose.model('Story', StorySchema);
+const Story = mongoose.model('Story', storySchema);
 
 export default Story;
