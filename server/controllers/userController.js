@@ -3,7 +3,7 @@ import Connection from '../models/Connection.js';
 import User from '../models/User.js';
 import fs from 'fs';
 import Post from '../models/Post.js';
-import { inngest } from '../inngest/index.js';
+import { inngest } from '../inngest/client.js';
 
 export const getUserProfile = async (req, res) => {
   try {
@@ -229,8 +229,8 @@ export const sendConnectionRequest = async (req, res) => {
     // Check if users are already connected
     const connection = await Connection.findOne({
       $or: [
-        { rom_user_id: userId, to_user_id: id },
-        { rom_user_id: id, to_user_id: userId },
+        { from_user_id: userId, to_user_id: id },
+        { from_user_id: id, to_user_id: userId },
       ],
     });
 

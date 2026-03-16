@@ -1,40 +1,60 @@
 import React, { useState } from 'react';
-import Loading from '../components/Loading';
 import { X, Image } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
+import api from '../api/axios';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@clerk/clerk-react';
 
 const CreatePost = () => {
+  const navigate = useNavigate();
   const [content, setContent] = useState('');
   const [Images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const user = useSelector((state) => state.user.value);
 
+  const { getToken } = useAuth();
+
   const handleSubmit = async () => {
-    try {
-      setLoading(true);
-
-      if (!content && Images.length === 0) {
-        toast.error("Post can't be empty");
-        return;
-      }
-
-      // Yaha normally API call hoti hai
-      console.log('Content:', content);
-      console.log('Images:', Images);
-
-      // reset form
-      setContent('');
-      setImages([]);
-    } catch (error) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
+    if (!Images.length && !content) {
+      return toast.error('Please add at least one image or text');
     }
-  };
+    setLoading(true);
 
-  if (loading) return <Loading />;
+    const postType =
+      images.length && content
+        ? 'text_with_image'
+        : images.length
+          ? 'image'
+          : 'text';
+
+    try {
+      const formData = new FormData();
+      formData.append('content', content);
+      formData.append('post_type', postType);
+      images.map((image) => {
+        formData.append('images', image);
+      });
+
+      const { data } = await api.post('/api/post/add', formData, {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+        },
+      });
+
+      if (data.success) {
+        navigate('/');
+      } else {
+        console.log(data.message);
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+      throw new Error(error.massage);
+    }
+    setLoading(false);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">

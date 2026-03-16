@@ -1,12 +1,9 @@
-import { Inngest } from 'inngest';
+import { inngest } from './client.js';
 import User from '../models/User.js';
 import Connection from '../models/Connection.js';
 import sendEmail from '../configs/nodeMailer.js';
 import Story from '../models/story.js';
 import Message from '../models/Message.js';
-
-// Create a client to send and receive events
-export const inngest = new Inngest({ id: 'pingup-app' });
 
 // Inngest Function to save user data to a database
 const syncUserCreation = inngest.createFunction(
@@ -41,7 +38,8 @@ const syncUserUpdation = inngest.createFunction(
   { id: 'update-user-from-clerk' },
   { event: 'clerk/user.update' },
   async ({ event }) => {
-    const { id, first_name, last_name, email_addresses } = event.data;
+    const { id, first_name, last_name, email_addresses, image_url } =
+      event.data;
 
     const updateUserData = {
       email: email_addresses[0].email_address,
@@ -148,7 +146,7 @@ const deleteStory = inngest.createFunction(
 
 const sendNotificationofUnseenMessages = inngest.createFunction(
   { id: 'send-unseen-messages-notification' },
-  { corn: 'TZ=American/New_Year 0 9 * * *' }, // Every Day 9 AM
+  { cron: 'TZ=Asia/kolkata 0 9 * * *' }, // Every Day 9 AM
   async ({ step }) => {
     const messages = await Message.find({ seen: false }).populate('to_user_id');
     const unseenCount = {};
@@ -167,7 +165,7 @@ const sendNotificationofUnseenMessages = inngest.createFunction(
       <div style= "font-family: Arial, sans-serif; padding: 20px;">
       <h2>Hi ${user.full_name},</h2>
       <p>You have ${unseenCount[userId]} unseen messages </p>
-      ">here</a> to view them</p>
+      <p>Login to PingUp to view them
       <br/>
       <p>Thanks,<br/>PingUP - Stay Connected </p>
       </div>

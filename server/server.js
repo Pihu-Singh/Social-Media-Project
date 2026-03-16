@@ -1,15 +1,19 @@
 import express from 'express';
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './configs/db.js';
-import { inngest, functions } from './inngest/index.js';
 import { serve } from 'inngest/express';
-
+import { inngest } from './inngest/client.js';
+import { functions } from './inngest/index.js';
 import { clerkMiddleware } from '@clerk/express';
 import userRouter from './routes/userRoutes.js';
 import postRouter from './routes/postRoutes.js';
 import storyRouter from './routes/storyRoutes.js';
 import messageRouter from './routes/messageRoutes.js';
+import { EventEmitter } from 'events';
+EventEmitter.defaultMaxListeners = 20;
+
+dotenv.config();
 
 const app = express();
 
