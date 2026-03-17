@@ -2,7 +2,7 @@ import { inngest } from './client.js';
 import User from '../models/User.js';
 import Connection from '../models/Connection.js';
 import sendEmail from '../configs/nodeMailer.js';
-import Story from '../models/story.js';
+import Story from '../models/Story.js';
 import Message from '../models/Message.js';
 
 // Inngest Function to save user data to a database
