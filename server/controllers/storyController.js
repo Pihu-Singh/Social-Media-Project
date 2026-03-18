@@ -1,8 +1,13 @@
 import imagekit from '../configs/imagekit.js';
 import fs from 'fs';
 import User from '../models/User.js';
+<<<<<<< HEAD
 import Story from '../models/Story.js';
 import { inngest } from '../inngest/client.js';
+=======
+import Story from '../models/story.js';
+import { inngest } from '../inngest/index.js';
+>>>>>>> a2ad62028278bf67f321407f62bb8034a405806b
 
 // Add User Story
 export const addUserStory = async (req, res) => {

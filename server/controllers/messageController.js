@@ -1,7 +1,17 @@
 import fs from 'fs';
+<<<<<<< HEAD
 import imagekit from '../configs/imagekit.js';
 import Message from '../models/Message.js';
 import { connections } from 'mongoose';
+=======
+import imagekit from '../configs/imagekit';
+import Message from '../models/Message';
+import { connection } from 'mongoose';
+
+// Create an empty object to store SS Event connections
+const connections = {};
+
+>>>>>>> a2ad62028278bf67f321407f62bb8034a405806b
 // Controller function for the SSE endpoint
 export const sseController = (req, res) => {
   const { userId } = req.params;
@@ -108,9 +118,15 @@ export const getChatMessages = async (req, res) => {
 export const getUserRecentMessages = async (req, res) => {
   try {
     const { userId } = req.auth();
+<<<<<<< HEAD
     const messages = await Message.find({ to_user_id: userId })
       .populate('from_user_id to_user_id')
       .sort({ created_at: -1 });
+=======
+    const messages = await Message.find(
+      { to_user_id: userId }.populate('from_user_id to_user_id'),
+    ).sort({ created_at: -1 });
+>>>>>>> a2ad62028278bf67f321407f62bb8034a405806b
 
     res.json({ success: true, messages });
   } catch (error) {

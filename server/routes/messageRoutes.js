@@ -3,7 +3,11 @@ import {
   getChatMessages,
   sendMessage,
   sseController,
+<<<<<<< HEAD
 } from '../controllers/messageController.js';
+=======
+} from '../controllers/messageController';
+>>>>>>> a2ad62028278bf67f321407f62bb8034a405806b
 import { upload } from '../configs/multer.js';
 import { protect } from '../middlewares/auth.js';
 

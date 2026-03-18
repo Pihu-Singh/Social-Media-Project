@@ -1,4 +1,6 @@
+
 import React, { useEffect } from 'react';
+
 import {
   Users,
   UserPlus,
@@ -7,12 +9,20 @@ import {
   MessageSquare,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAuth } from '@clerk/clerk-react';
 import { fetchConnections } from '../features/connections/connectionsSlice';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
+import {
+  dummyConnectionsData as connections,
+  dummyFollowersData as followers,
+  dummyFollowingData as following,
+  dummyPendingConnectionsData as pendingconnecton,
+} from '../assets/assets';
+
 
 const Connections = () => {
   const { connections, pendingConnections, followers, following } = useSelector(
@@ -24,12 +34,23 @@ const Connections = () => {
   const navigate = useNavigate();
   const { getToken } = useAuth();
   const dispatch = useDispatch();
+}
+
+
+
+
+const Connection = () => {
+  const [currentTab, setCurrentTab] = useState('Followers');
+
+  const navigate = useNavigate();
+
 
   const dataArray = [
-    { lable: 'Followers', value: followers, icon: Users },
-    { lable: 'Following', value: following, icon: UserCheck },
-    { lable: 'Pending', value: pendingConnections, icon: UserRoundPen },
-    { lable: 'Connections', value: connections, icon: UserPlus },
+    { label: 'Followers', value: followers, icon: Users },
+    { label: 'Following', value: following, icon: UserCheck },
+
+    { label: 'Pending', value: pendingConnections, icon: UserRoundPen },
+    { label: 'Connections', value: connections, icon: UserPlus },
   ];
 
   const handleUnfollow = async (userId) => {
@@ -77,6 +98,12 @@ const Connections = () => {
       dispatch(fetchConnections(token));
     });
   }, []);
+
+       
+    { label: 'Pending', value: pendingconnecton, icon: UserRoundPen },
+    { label: 'Connections', value: connections, icon: UserPlus },
+    
+
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -170,7 +197,9 @@ const Connections = () => {
 
                     {currentTab === 'Following' && (
                       <button
+
                         onClick={() => handleUnfollow(user._id)}
+
                         className="w-full p-2 text-sm rounded bg-slate-100
                       hover:bg-slate-200 text-black active:scale-95 transition
                       cursor-pointer"
@@ -181,7 +210,9 @@ const Connections = () => {
 
                     {currentTab === 'Pending' && (
                       <button
+
                         onClick={() => acceptConnection(user._id)}
+
                         className="w-full p-2 text-sm rounded bg-slate-100
                       hover:bg-slate-200 text-black active:scale-95 transition
                       cursor-pointer"

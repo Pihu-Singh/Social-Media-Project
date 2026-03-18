@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
+
+
+import { dummyPostsData } from '../assets/assets';
+
 import Loading from '../components/Loading';
 import StoriesBar from '../components/StoriesBar';
 import PostCard from '../components/PostCard';
 import { RecentMessages } from '../components/RecentMessages';
 import { assets } from '../assets/assets';
+
 import api from '../api/axios';
 import { useAuth } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
@@ -28,6 +33,15 @@ const Feed = () => {
     } catch (error) {
       toast.error(error.message);
     }
+
+
+const Feed = () => {
+  const [feeds, setfeeds] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchFeeds = async () => {
+    setfeeds(dummyPostsData);
+
     setLoading(false);
   };
 
